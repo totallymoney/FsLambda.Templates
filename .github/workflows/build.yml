@@ -49,6 +49,10 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+          ref: ${{ github.ref }}
+
+      - name: Pull latest (after format job)
+        run: git pull --ff-only
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -72,6 +76,18 @@ jobs:
           dotnet build TemplateTest -c Release
           dotnet new uninstall FsLambda.Templates
 
+      - name: Generate changelog
+        run: |
+          if git describe --tags --abbrev=0 2>/dev/null; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+            echo "Generating changelog from $LAST_TAG to HEAD"
+            CHANGELOG=$(git log ${LAST_TAG}..HEAD --oneline --no-merges)
+          else
+            echo "No previous tags found, using recent commits"
+            CHANGELOG=$(git log --oneline -20 --no-merges)
+          fi
+          echo "$CHANGELOG" > changelog.txt
+
       - name: Publish to GitHub Packages
         run: |
           dotnet nuget add source https://nuget.pkg.github.com/totallymoney/index.json \
@@ -84,32 +100,8 @@ jobs:
             --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
 
-      - name: Check NuGet API key
-        run: |
-          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
-            echo "::error::NUGET_API_KEY is empty"
-            exit 1
-          else
-            echo "NUGET_API_KEY is set (length: ${#NUGET_API_KEY})"
-          fi
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
       - name: Publish to NuGet.org
         run: dotnet nuget push "nupkgs/*" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          if git describe --tags --abbrev=0 2>/dev/null; then
-            LAST_TAG=$(git describe --tags --abbrev=0)
-            echo "Generating changelog from $LAST_TAG to HEAD"
-            CHANGELOG=$(git log ${LAST_TAG}..HEAD --oneline --no-merges)
-          else
-            echo "No previous tags found, using recent commits"
-            CHANGELOG=$(git log --oneline -20 --no-merges)
-          fi
-          echo "$CHANGELOG" > changelog.txt
 
       - name: Create GitHub Release
         env:
