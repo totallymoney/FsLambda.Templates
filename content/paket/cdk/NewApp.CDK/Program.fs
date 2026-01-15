@@ -12,7 +12,7 @@ module Program =
 
             lambda "HelloWorld" {
                 runtime Runtime.DOTNET_8
-                // Namespace: NewApp; Type: Function; Method: HandleAsync
+                // Namespace: NewApp; Module: Handler; Function: sayHello
                 handler "NewApp::NewApp.Handler::sayHello"
                 // Use the published output from the src/NewApp project
                 code "../src/NewApp/bin/Release/net8.0/publish"

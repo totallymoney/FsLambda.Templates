@@ -1,18 +1,23 @@
 services:
   dynamodb:
-    image: amazon/dynamodb-local:latest
+    image: amazon/dynamodb-local:2.5.3
     restart: unless-stopped
     entrypoint: java
     command: "-jar DynamoDBLocal.jar -sharedDb"
     ports:
       - "9310:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/shell/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   init-dynamo:
-    image: amazon/aws-cli:latest
+    image: amazon/aws-cli:2.22.35
     platform: linux/amd64
     entrypoint: ["/bin/sh", "-c"]
     command: |
-      sleep 5 && \
       aws dynamodb create-table \
         --table-name NewApp-dev-NewApp \
         --attribute-definitions AttributeName=Id,AttributeType=S \
@@ -25,10 +30,11 @@ services:
       - AWS_SECRET_ACCESS_KEY=dev
       - AWS_DEFAULT_REGION=eu-central-1
     depends_on:
-      - dynamodb
+      dynamodb:
+        condition: service_healthy
 
   fake_api:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
+    image: mcr.microsoft.com/dotnet/sdk:8.0.404
     working_dir: /code
     volumes:
       - ./:/code
@@ -37,7 +43,7 @@ services:
       - "9312:5000"
 
   integration_tests:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
+    image: mcr.microsoft.com/dotnet/sdk:8.0.404
     working_dir: /code
     volumes:
       - ./:/code

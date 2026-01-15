@@ -13,7 +13,7 @@
     { "path": "tests/NewApp.UnitTests/NewApp.UnitTests.fsproj" }
   ],
   "defaultName": "NewApp",
-  "preferNameDirectory": "true",
+  "preferNameDirectory": true,
   "postActions": [],
   "sources": [
     {
