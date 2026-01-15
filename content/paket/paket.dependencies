@@ -1,0 +1,15 @@
+framework auto-detect
+source https://api.nuget.org/v3/index.json
+
+nuget FsCDK FsCDKPkgVersion
+nuget Amazon.CDK.Lib ~> 2.213.0
+nuget FSharp.Core FSharpCorePkgVersion
+nuget Amazon.Lambda.Core AmazonLambdaCorePkgVersion
+nuget Amazon.Lambda.Serialization.SystemTextJson AmazonLambdaSerializationPkgVersion
+nuget Amazon.Lambda.APIGatewayEvents AmazonLambdaAPIGatewayEventsPkgVersion
+nuget AWSSDK.DynamoDBv2 AwsSdkDynamoDBv2PkgVersion
+nuget System.Text.Json SystemTextJsonPkgVersion
+nuget FSharp.SystemTextJson FSharpSystemTextJsonPkgVersion
+nuget FsToolkit.ErrorHandling FsToolkitErrorHandlingPkgVersion
+nuget AsyncWriterResult AsyncWriterResultPkgVersion
+nuget Expecto ExpectoPkgVersion

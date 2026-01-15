@@ -1,0 +1,9 @@
+bin/
+obj/
+nupkgs/
+.fake/
+.ionide/
+.cache/
+.DS_Store
+.idea/
+*.user

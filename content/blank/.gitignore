@@ -1,0 +1,30 @@
+# Build outputs
+bin/
+obj/
+publish/
+output/
+
+# IDE
+.idea/
+.vs/
+*.user
+*.suo
+
+# Tools
+.fake/
+.ionide/
+.cache/
+.dynamodb/
+
+# Packages
+packages/
+paket-files/
+
+# CDK
+cdk.out/
+node_modules/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db

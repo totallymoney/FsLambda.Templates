@@ -1,0 +1,47 @@
+name: pull_request
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x.x'
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Pack templates
+        run: dotnet pack FsLambda.Templates.proj -c Release -p:PackageOutputPath="nupkgs" -p:Version="0.1.0-pr"
+
+      - name: Install templates
+        run: |
+          dotnet nuget add source "${{ github.workspace }}/nupkgs" --name local
+          dotnet new install "FsLambda.Templates::0.1.0-pr" --nuget-source local
+
+      - name: Test NuGet template
+        run: |
+          dotnet new fslambda -n TemplateTest
+          dotnet build TemplateTest -c Release
+
+      - name: Test Paket template
+        run: |
+          dotnet new fslambda-paket -n PaketTemplateTest
+          cd PaketTemplateTest
+          dotnet tool restore
+          dotnet paket install
+          dotnet build -c Release
+
+      - name: Uninstall templates
+        run: dotnet new uninstall FsLambda.Templates
