@@ -11,6 +11,13 @@
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <NoBuild>true</NoBuild>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <!-- NuGet.org metadata -->
+    <Authors>TotallyMoney</Authors>
+    <PackageProjectUrl>https://github.com/totallymoney/FsLambda.Templates</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/totallymoney/FsLambda.Templates</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>nuget-icon.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ExcludeFromPackage>
