@@ -157,7 +157,7 @@ dotnet new fslambda \
   --AmazonLambdaCorePkgVersion 2.7.0
 ```
 
-See `content/blank/.template.config/template.json` for the full list of available parameters.
+See `content/nuget/.template.config/template.json` for the full list of available parameters.
 
 ## License
 
