@@ -84,6 +84,17 @@ jobs:
             --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
 
+      - name: Check NuGet API key
+        run: |
+          if [ -z "${{ secrets.NUGET_API_KEY }}" ]; then
+            echo "::error::NUGET_API_KEY is empty"
+            exit 1
+          else
+            echo "NUGET_API_KEY is set (length: ${#NUGET_API_KEY})"
+          fi
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
       - name: Publish to NuGet.org
         run: dotnet nuget push "nupkgs/*" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
