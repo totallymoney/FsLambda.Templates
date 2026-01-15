@@ -43,7 +43,6 @@ jobs:
     permissions:
       contents: write
       packages: write
-      id-token: write  # Required for NuGet trusted publishing (OIDC)
 
     steps:
       - uses: actions/checkout@v4
@@ -85,14 +84,8 @@ jobs:
             --api-key ${{ secrets.GITHUB_TOKEN }} \
             --skip-duplicate
 
-      - name: NuGet login (OIDC)
-        uses: NuGet/login@v1
-        id: nuget-login
-        with:
-          user: ${{ secrets.NUGET_USER }}
-
       - name: Publish to NuGet.org
-        run: dotnet nuget push "nupkgs/*" -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push "nupkgs/*" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
       - name: Generate changelog
         id: changelog
