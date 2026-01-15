@@ -22,4 +22,5 @@ module Program =
             }
         }
         |> ignore
+
         0

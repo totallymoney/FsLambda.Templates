@@ -3,7 +3,9 @@ module NewApp.Handler
 open Amazon.Lambda.Core
 open Amazon.Lambda.Serialization.SystemTextJson
 
-type HelloRequest = { Name: string; Message: string }
+type HelloRequest =
+    { Name: string
+      Message: string }
 
 type HelloResponse = { Response: string }
 
