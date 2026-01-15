@@ -35,10 +35,12 @@ jobs:
           dotnet new fslambda -n TemplateTest
           dotnet build TemplateTest -c Release
 
+      - name: Create Paket template
+        run: dotnet new fslambda-paket -n PaketTemplateTest
+
       - name: Test Paket template
+        working-directory: PaketTemplateTest
         run: |
-          dotnet new fslambda-paket -n PaketTemplateTest
-          cd PaketTemplateTest
           dotnet tool restore
           dotnet paket install
           dotnet build -c Release
