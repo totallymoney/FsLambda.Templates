@@ -1,7 +1,9 @@
 framework auto-detect
+storage none
 source https://api.nuget.org/v3/index.json
 
 nuget FsCDK FsCDKPkgVersion
+nuget Amazon.CDK.Lib 2.213.0
 nuget FSharp.Core lowest_matching: true
 nuget Amazon.Lambda.Core AmazonLambdaCorePkgVersion
 nuget Amazon.Lambda.Serialization.SystemTextJson AmazonLambdaSerializationPkgVersion
