@@ -35,6 +35,20 @@ dotnet tool restore && dotnet paket install
 dotnet fsi build.fsx
 ```
 
+### Target Framework (NuGet template only)
+
+The NuGet template (`fslambda`) supports framework selection via `-f` or `--framework`:
+
+```sh
+# .NET 8.0 (default, LTS)
+dotnet new fslambda -n MyApp
+
+# .NET 10.0 (LTS)
+dotnet new fslambda -n MyApp -f net10.0
+```
+
+Supported frameworks: `net8.0`, `net10.0`
+
 ### Deploy to AWS
 
 ```sh
