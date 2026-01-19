@@ -2,7 +2,7 @@ framework auto-detect
 source https://api.nuget.org/v3/index.json
 
 nuget FsCDK FsCDKPkgVersion
-nuget FSharp.Core ~> FSharpCorePkgVersion
+nuget FSharp.Core lowest_matching: true
 nuget Amazon.Lambda.Core AmazonLambdaCorePkgVersion
 nuget Amazon.Lambda.Serialization.SystemTextJson AmazonLambdaSerializationPkgVersion
 nuget Amazon.Lambda.APIGatewayEvents AmazonLambdaAPIGatewayEventsPkgVersion

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>TargetFrameworkValue</TargetFramework>
     <GenerateProgramFile>false</GenerateProgramFile>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>FS0025</WarningsAsErrors>

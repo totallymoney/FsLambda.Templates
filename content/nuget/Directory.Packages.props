@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="FsCDK" Version="FsCDKPkgVersion" />
-    <PackageVersion Include="FSharp.Core" Version="FSharpCorePkgVersion" />
+    <PackageVersion Include="FSharp.Core" Version="FSharpCoreVersionPlaceholder" />
     <PackageVersion Include="Amazon.Lambda.Core" Version="AmazonLambdaCorePkgVersion" />
     <PackageVersion Include="Amazon.Lambda.Serialization.SystemTextJson" Version="AmazonLambdaSerializationPkgVersion" />
     <PackageVersion Include="Amazon.Lambda.APIGatewayEvents" Version="AmazonLambdaAPIGatewayEventsPkgVersion" />

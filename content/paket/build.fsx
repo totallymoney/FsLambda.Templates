@@ -31,7 +31,7 @@ pipeline "ci" {
 
     stage "publish" {
         workingDir src
-        run $"dotnet publish -c {config} -f net8.0"
+        run $"dotnet publish -c {config} -f TargetFrameworkValue"
     }
 
     stage "docs" {
@@ -47,7 +47,7 @@ pipeline "docs" {
     stage "build" {
         run "dotnet tool restore"
         run "dotnet paket restore"
-        run $"dotnet publish {src} -c {config} -f net8.0"
+        run $"dotnet publish {src} -c {config} -f TargetFrameworkValue"
         run $"dotnet fsdocs build --properties Configuration={config} --eval --strict"
     }
 
@@ -57,7 +57,7 @@ pipeline "docs" {
 pipeline "docs:watch" {
     description "Watch and rebuild the documentation site"
 
-    stage "build" { run $"dotnet publish {src} -c {config} -f net8.0" }
+    stage "build" { run $"dotnet publish {src} -c {config} -f TargetFrameworkValue" }
     stage "watch" { run "dotnet fsdocs watch --eval --clean" }
 
     runIfOnlySpecified true
