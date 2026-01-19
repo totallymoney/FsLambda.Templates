@@ -49,8 +49,6 @@ dotnet new fslambda -n MyApp -f net10.0
 
 Supported frameworks: `net8.0`, `net10.0`
 
-> **Note:** The Paket template (`fslambda-paket`) is fixed at .NET 8.0 due to Paket not yet fully supporting net10.0.
-
 ### Deploy to AWS
 
 ```sh
