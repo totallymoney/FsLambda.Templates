@@ -8,7 +8,6 @@
   "tags": { "language": "F#", "type": "project" },
   "sourceName": "NewApp",
   "primaryOutputs": [
-    { "path": "cdk/NewApp.CDK/NewApp.CDK.fsproj" },
     { "path": "src/NewApp/NewApp.fsproj" },
     { "path": "tests/NewApp.UnitTests/NewApp.UnitTests.fsproj" }
   ],
@@ -17,6 +16,8 @@
   "postActions": [],
   "sources": [
     {
+      "source": "./",
+      "target": "./",
       "include": ["**/*"],
       "exclude": [
         ".template.config/**/*",
@@ -28,8 +29,37 @@
         "paket.lock",
         "App.fs",
         "NewApp.fsproj",
-        "Platform/**/*"
+        "NewApp.sln",
+        "Platform/**/*",
+        "cdk-ts/**/*",
+        "cdk-fsharp/**/*"
       ]
+    },
+    {
+      "condition": "(cdk == 'ts')",
+      "source": "./cdk-ts/",
+      "target": "./cdk/",
+      "include": ["**/*"],
+      "exclude": ["NewApp.sln"]
+    },
+    {
+      "condition": "(cdk == 'ts')",
+      "source": "./cdk-ts/",
+      "target": "./",
+      "include": ["NewApp.sln"]
+    },
+    {
+      "condition": "(cdk == 'fsharp')",
+      "source": "./cdk-fsharp/",
+      "target": "./cdk/",
+      "include": ["**/*"],
+      "exclude": ["NewApp.sln"]
+    },
+    {
+      "condition": "(cdk == 'fsharp')",
+      "source": "./cdk-fsharp/",
+      "target": "./",
+      "include": ["NewApp.sln"]
     }
   ],
   "guids": [
@@ -48,6 +78,16 @@
       ],
       "defaultValue": "net8.0",
       "replaces": "TargetFrameworkValue"
+    },
+    "cdk": {
+      "type": "parameter",
+      "description": "CDK infrastructure language",
+      "datatype": "choice",
+      "choices": [
+        { "choice": "ts", "description": "TypeScript CDK (default)" },
+        { "choice": "fsharp", "description": "F# CDK using FsCDK library" }
+      ],
+      "defaultValue": "ts"
     },
     "FsCDKPkgVersion": {
       "type": "parameter",
