@@ -24,6 +24,10 @@ paket-files/
 cdk.out/
 node_modules/
 
+# CDK TypeScript compiled output
+cdk/**/*.js
+cdk/**/*.d.ts
+
 # Misc
 *.log
 .DS_Store

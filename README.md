@@ -49,11 +49,36 @@ dotnet new fslambda -n MyApp -f net10.0
 
 Supported frameworks: `net8.0`, `net10.0`
 
-### Deploy to AWS
+### CDK Language
+
+Both templates support CDK infrastructure in TypeScript (default) or F#:
 
 ```sh
-cd cdk
-npx cdk deploy
+# TypeScript CDK (default)
+dotnet new fslambda -n MyApp
+
+# F# CDK using FsCDK library
+dotnet new fslambda -n MyApp --cdk fsharp
+```
+
+**TypeScript CDK** requires `npm install` in the `cdk/` directory before deploying:
+
+```sh
+cd cdk && npm install && npx cdk deploy
+```
+
+**F# CDK** uses FsCDK and builds with .NET (no npm required).
+
+### Deploy to AWS
+
+**TypeScript CDK (default):**
+```sh
+cd cdk && npm install && npx cdk deploy
+```
+
+**F# CDK:**
+```sh
+cd cdk && npx cdk deploy
 ```
 
 ## Templates
@@ -68,7 +93,7 @@ npx cdk deploy
 ```
 MyApp/
 ├── src/MyApp/              # Lambda handler
-├── cdk/MyApp.CDK/          # CDK infrastructure (FsCDK)
+├── cdk/                    # CDK infrastructure (TypeScript or F#)
 ├── tests/
 │   ├── MyApp.UnitTests/    # Unit tests (Expecto)
 │   └── MyApp.IntegrationTests/

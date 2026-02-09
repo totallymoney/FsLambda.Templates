@@ -15,7 +15,7 @@ module Program =
                 // Namespace: NewApp; Module: Handler; Function: sayHello
                 handler "NewApp::NewApp.Handler::sayHello"
                 // Use the published output from the src/NewApp project
-                code "../src/NewApp/bin/Release/net8.0/publish"
+                code "../src/NewApp/bin/Release/TargetFrameworkValue/publish"
 
                 // Public function URL (no auth) for quick testing
                 functionUrl { authType FunctionUrlAuthType.NONE }
