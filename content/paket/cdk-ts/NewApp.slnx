@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NewApp/NewApp.fsproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NewApp.FakeAPI/NewApp.FakeAPI.fsproj" />
+    <Project Path="tests/NewApp.IntegrationTests/NewApp.IntegrationTests.fsproj" />
+    <Project Path="tests/NewApp.UnitTests/NewApp.UnitTests.fsproj" />
+  </Folder>
+  <Folder Name="/_Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/deploy.yml" />
+    <File Path="build.fsx" />
+    <File Path="cdk/cdk.json" />
+    <File Path="docker-compose.yml" />
+    <File Path="paket.dependencies" />
+  </Folder>
+</Solution>

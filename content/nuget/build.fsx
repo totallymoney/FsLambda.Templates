@@ -39,6 +39,8 @@ let startFakeApi () =
         psi.RedirectStandardOutput <- true
         psi.RedirectStandardError <- true
         let p = Process.Start psi
+        p.BeginOutputReadLine ()
+        p.BeginErrorReadLine ()
         fakeApiProcess <- Some p
 
         let mutable ready = false

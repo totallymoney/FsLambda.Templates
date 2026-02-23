@@ -59,6 +59,8 @@ services:
     depends_on:
       dynamodb:
         condition: service_healthy
+      init-dynamo:
+        condition: service_completed_successfully
       fake_api:
         condition: service_healthy
     command: >
