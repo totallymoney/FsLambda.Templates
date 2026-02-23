@@ -1,52 +1,129 @@
-name: Build
+name: build
 
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-
-permissions: write-all
+on: push
 
 env:
-  CONFIG: Release
+  VERSION: 0.1.${{ github.run_number }}
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: "DotnetSdkVersionPlaceholder"
+          cache: true
+          cache-dependency-path: Directory.Packages.props
 
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
+      - run: dotnet tool restore
+      - run: dotnet build -c Release
+      - run: dotnet run --project tests/NewApp.UnitTests -c Release --no-build
+
+      - name: Publish Lambda
+        run: dotnet publish src/NewApp -c Release -o publish
+
+      - uses: actions/upload-artifact@v4
         with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.fsproj', '**/Directory.Packages.props') }}
-          restore-keys: ${{ runner.os }}-nuget-
+          name: lambda-publish
+          path: publish/
 
-      - name: Run CI pipeline
-        run: dotnet fsi build.fsx
+  integration_tests:
+    name: Run Integration Tests
+    runs-on: ubuntu-latest
 
-      - name: Upload docs
-        if: github.event_name == 'push'
-        uses: actions/upload-pages-artifact@v3
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: docker compose pull --quiet --ignore-pull-failures
+        continue-on-error: true
+
+      - run: docker compose up -d fake_api
+
+      - run: docker compose run --rm integration_tests
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build, integration_tests]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v4
         with:
-          path: output/
+          name: lambda-publish
+          path: publish/
+
+      - name: Zip Lambda artifact
+        run: cd publish && zip -r ../lambda-publish.zip .
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ env.VERSION }}" \
+            lambda-publish.zip \
+            --generate-notes \
+            --title "v${{ env.VERSION }}"
 
   deploy:
-    if: github.event_name == 'push'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    name: Deploy to Stage
     runs-on: ubuntu-latest
-    needs: build
+    needs: [release]
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: lambda-publish
+          path: publish/
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: cdk/package-lock.json
+
+      # TODO: Configure AWS credentials for your account
+      # - uses: aws-actions/configure-aws-credentials@master
+      #   with:
+      #     role-to-assume: arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_OIDC_ROLE
+      #     aws-region: eu-west-1
+
+      - name: Install CDK dependencies
+        working-directory: cdk
+        run: npm ci
+
+      - name: Deploy to stage
+        working-directory: cdk
+        run: |
+          for attempt in 1 2 3; do
+            echo "Deploy attempt $attempt/3..."
+            if npx cdk deploy NewApp-stage \
+                --require-approval never; then
+              echo "Deploy succeeded"
+              exit 0
+            fi
+            if [ $attempt -lt 3 ]; then
+              echo "Deploy failed, retrying in 30s..."
+              sleep 30
+            fi
+          done
+          echo "Deploy failed after 3 attempts"
+          exit 1
+        env:
+          VERSION: ${{ env.VERSION }}

@@ -8,12 +8,6 @@
         "paket"
       ]
     },
-    "fsdocs-tool": {
-      "version": "21.0.0",
-      "commands": [
-        "fsdocs"
-      ]
-    },
     "fantomas": {
       "version": "6.3.10",
       "commands": [

@@ -108,11 +108,50 @@
         ]
       }
     },
+    "LambdaRuntime": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "LambdaRuntimePlaceholder",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          { "condition": "(framework == 'net8.0')", "value": "DOTNET_8" },
+          { "condition": "(framework == 'net10.0')", "value": "DOTNET_10" }
+        ]
+      }
+    },
+    "DotnetSdkImage": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "DotnetSdkImagePlaceholder",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          { "condition": "(framework == 'net8.0')", "value": "8.0" },
+          { "condition": "(framework == 'net10.0')", "value": "10.0" }
+        ]
+      }
+    },
+    "DotnetSdkVersion": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "DotnetSdkVersionPlaceholder",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          { "condition": "(framework == 'net8.0')", "value": "8.0.x" },
+          { "condition": "(framework == 'net10.0')", "value": "10.x.x" }
+        ]
+      }
+    },
     "AmazonLambdaCorePkgVersion": {
       "type": "parameter",
       "dataType": "string",
       "replaces": "AmazonLambdaCorePkgVersion",
-      "defaultValue": "2.7.0"
+      "defaultValue": "2.8.1"
     },
     "AmazonLambdaAPIGatewayEventsPkgVersion": {
       "type": "parameter",
@@ -124,7 +163,7 @@
       "type": "parameter",
       "dataType": "string",
       "replaces": "AmazonLambdaSerializationPkgVersion",
-      "defaultValue": "2.4.4"
+      "defaultValue": "2.4.5"
     },
     "AwsSdkDynamoDBv2PkgVersion": {
       "type": "parameter",
@@ -148,13 +187,13 @@
       "type": "parameter",
       "dataType": "string",
       "replaces": "FsToolkitErrorHandlingPkgVersion",
-      "defaultValue": "5.0.1"
+      "defaultValue": "5.1.0"
     },
     "AsyncWriterResultPkgVersion": {
       "type": "parameter",
       "dataType": "string",
       "replaces": "AsyncWriterResultPkgVersion",
-      "defaultValue": "1.0.53"
+      "defaultValue": "2.0.66"
     },
     "ExpectoPkgVersion": {
       "type": "parameter",

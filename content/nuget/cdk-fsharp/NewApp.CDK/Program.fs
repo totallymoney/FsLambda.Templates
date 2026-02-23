@@ -11,11 +11,11 @@ module Program =
         stack "NewApp" {
 
             lambda "HelloWorld" {
-                runtime Runtime.DOTNET_8
+                runtime Runtime.LambdaRuntimePlaceholder
                 // Namespace: NewApp; Module: Handler; Function: sayHello
                 handler "NewApp::NewApp.Handler::sayHello"
-                // Use the published output from the src/NewApp project
-                code "../src/NewApp/bin/Release/TargetFrameworkValue/publish"
+                // Use the published output from the top-level publish directory
+                code "../publish"
 
                 // Public function URL (no auth) for quick testing
                 functionUrl { authType FunctionUrlAuthType.NONE }
