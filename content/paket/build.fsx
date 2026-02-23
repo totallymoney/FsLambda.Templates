@@ -2,20 +2,69 @@
 
 #r "nuget: Fun.Build, 1.0.3"
 
+open System
+open System.Diagnostics
 open System.IO
+open System.Net.Http
+open System.Threading
 open Fun.Build
 
 let (</>) a b = Path.Combine(a, b)
 let root = __SOURCE_DIRECTORY__
 let config = "Release"
 
-let sln = root </> "NewApp.sln"
+let sln = root </> "NewApp.SolutionExtensionPlaceholder"
 let src = root </> "src" </> "NewApp"
 let unitTests = root </> "tests" </> "NewApp.UnitTests"
 let integrationTests = root </> "tests" </> "NewApp.IntegrationTests"
+let fakeApiProject = root </> "tests" </> "NewApp.FakeAPI"
+let fakeApiPort = 9312
+let fakeApiUrl = $"http://localhost:{fakeApiPort}"
+
+let isFakeApiRunning () =
+    use client = new HttpClient (Timeout = TimeSpan.FromSeconds 2.0)
+    try client.GetAsync($"{fakeApiUrl}/healthcheck").Result.IsSuccessStatusCode
+    with _ -> false
+
+let mutable fakeApiProcess: Process option = None
+
+let startFakeApi () =
+    if isFakeApiRunning () then
+        printfn $"FakeAPI already running on port %d{fakeApiPort}"
+    else
+        printfn $"Starting FakeAPI on port %d{fakeApiPort}..."
+        let psi = ProcessStartInfo ("dotnet", $"run --project {fakeApiProject}")
+        psi.Environment["PORT"] <- string fakeApiPort
+        psi.UseShellExecute <- false
+        psi.RedirectStandardOutput <- true
+        psi.RedirectStandardError <- true
+        let p = Process.Start psi
+        p.BeginOutputReadLine ()
+        p.BeginErrorReadLine ()
+        fakeApiProcess <- Some p
+
+        let mutable ready = false
+        for _ in 1..30 do
+            if not ready then
+                Thread.Sleep 1000
+                ready <- isFakeApiRunning ()
+
+        if not ready then
+            p.Kill true
+            failwith "FakeAPI failed to start within 30 seconds"
+
+        printfn $"FakeAPI started on port %d{fakeApiPort} (PID: %d{p.Id})"
+
+let stopFakeApi () =
+    match fakeApiProcess with
+    | Some p when not p.HasExited ->
+        p.Kill true
+        p.WaitForExit ()
+        printfn $"FakeAPI stopped (PID: %d{p.Id})"
+    | _ -> ()
 
 pipeline "ci" {
-    description "Build, test, publish, and generate docs"
+    description "Build and run all tests"
 
     stage "restore" {
         run "dotnet tool restore"
@@ -24,41 +73,23 @@ pipeline "ci" {
 
     stage "build" { run $"dotnet build {sln} -c {config}" }
 
-    stage "test" {
-        run $"dotnet run --project {unitTests} -c {config} --no-build"
-        run $"dotnet run --project {integrationTests} -c {config} --no-build"
-    }
+    stage "unit-tests" { run $"dotnet run --project {unitTests} -c {config} --no-build" }
 
-    stage "publish" {
-        workingDir src
-        run $"dotnet publish -c {config} -f TargetFrameworkValue"
-    }
+    stage "fake-api" { run (fun _ -> startFakeApi (); 0) }
 
-    stage "docs" {
-        run $"dotnet fsdocs build --properties Configuration={config} --eval --strict"
-    }
+    stage "integration-tests" { run $"dotnet run --project {integrationTests} -c {config} --no-build" }
+
+    post [
+        stage "cleanup" { run (fun _ -> stopFakeApi (); 0) }
+    ]
 
     runIfOnlySpecified false
 }
 
-pipeline "docs" {
-    description "Build the documentation site"
+pipeline "publish" {
+    description "Publish Lambda for CDK deployment"
 
-    stage "build" {
-        run "dotnet tool restore"
-        run "dotnet paket restore"
-        run $"dotnet publish {src} -c {config} -f TargetFrameworkValue"
-        run $"dotnet fsdocs build --properties Configuration={config} --eval --strict"
-    }
-
-    runIfOnlySpecified true
-}
-
-pipeline "docs:watch" {
-    description "Watch and rebuild the documentation site"
-
-    stage "build" { run $"dotnet publish {src} -c {config} -f TargetFrameworkValue" }
-    stage "watch" { run "dotnet fsdocs watch --eval --clean" }
+    stage "publish" { run $"dotnet publish {src} -c {config} -o publish" }
 
     runIfOnlySpecified true
 }
