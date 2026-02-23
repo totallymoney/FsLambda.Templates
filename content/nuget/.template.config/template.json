@@ -26,6 +26,7 @@
         "App.fs",
         "NewApp.fsproj",
         "NewApp.sln",
+        "NewApp.slnx",
         "Platform/**/*",
         "cdk-ts/**/*",
         "cdk-fsharp/**/*"
@@ -36,26 +37,38 @@
       "source": "./cdk-ts/",
       "target": "./cdk/",
       "include": ["**/*"],
-      "exclude": ["NewApp.sln"]
+      "exclude": ["NewApp.sln", "NewApp.slnx"]
     },
     {
-      "condition": "(cdk == 'ts')",
+      "condition": "(cdk == 'ts' && framework == 'net8.0')",
       "source": "./cdk-ts/",
       "target": "./",
       "include": ["NewApp.sln"]
+    },
+    {
+      "condition": "(cdk == 'ts' && framework == 'net10.0')",
+      "source": "./cdk-ts/",
+      "target": "./",
+      "include": ["NewApp.slnx"]
     },
     {
       "condition": "(cdk == 'fsharp')",
       "source": "./cdk-fsharp/",
       "target": "./cdk/",
       "include": ["**/*"],
-      "exclude": ["NewApp.sln"]
+      "exclude": ["NewApp.sln", "NewApp.slnx"]
     },
     {
-      "condition": "(cdk == 'fsharp')",
+      "condition": "(cdk == 'fsharp' && framework == 'net8.0')",
       "source": "./cdk-fsharp/",
       "target": "./",
       "include": ["NewApp.sln"]
+    },
+    {
+      "condition": "(cdk == 'fsharp' && framework == 'net10.0')",
+      "source": "./cdk-fsharp/",
+      "target": "./",
+      "include": ["NewApp.slnx"]
     }
   ],
   "guids": [
@@ -94,6 +107,19 @@
       "dataType": "string",
       "replaces": "FsCDKPkgVersion",
       "defaultValue": "0.2.0"
+    },
+    "SolutionExtension": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "SolutionExtensionPlaceholder",
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          { "condition": "(framework == 'net8.0')", "value": "sln" },
+          { "condition": "(framework == 'net10.0')", "value": "slnx" }
+        ]
+      }
     },
     "FSharpCoreVersion": {
       "type": "generated",

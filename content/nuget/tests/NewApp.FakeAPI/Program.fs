@@ -1,10 +1,16 @@
+open System
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 
+let port =
+    match Environment.GetEnvironmentVariable "PORT" with
+    | null | "" -> "80"
+    | p -> p
+
 let builder = WebApplication.CreateBuilder ()
-builder.WebHost.UseUrls ("http://0.0.0.0:80") |> ignore
+builder.WebHost.UseUrls ($"http://0.0.0.0:{port}") |> ignore
 
 let app = builder.Build ()
 

@@ -13,7 +13,7 @@ let (</>) a b = Path.Combine(a, b)
 let root = __SOURCE_DIRECTORY__
 let config = "Release"
 
-let sln = root </> "NewApp.sln"
+let sln = root </> "NewApp.SolutionExtensionPlaceholder"
 let src = root </> "src" </> "NewApp"
 let unitTests = root </> "tests" </> "NewApp.UnitTests"
 let integrationTests = root </> "tests" </> "NewApp.IntegrationTests"
