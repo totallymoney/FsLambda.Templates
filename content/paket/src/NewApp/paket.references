@@ -1,4 +1,8 @@
 FSharp.Core
 Amazon.Lambda.Core
-Amazon.Lambda.APIGatewayEvents
 Amazon.Lambda.Serialization.SystemTextJson
+AWSSDK.Lambda
+FSharp.SystemTextJson
+FsToolkit.ErrorHandling
+AsyncWriterResult
+System.Text.Json

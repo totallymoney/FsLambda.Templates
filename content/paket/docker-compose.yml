@@ -1,38 +1,4 @@
 services:
-  dynamodb:
-    image: amazon/dynamodb-local:2.5.3
-    restart: unless-stopped
-    entrypoint: java
-    command: "-jar DynamoDBLocal.jar -sharedDb"
-    ports:
-      - "9310:8000"
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/shell/ || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 5s
-
-  init-dynamo:
-    image: amazon/aws-cli:2.22.35
-    platform: linux/amd64
-    entrypoint: ["/bin/sh", "-c"]
-    command: |
-      aws dynamodb create-table \
-        --table-name NewApp-dev-NewApp \
-        --attribute-definitions AttributeName=Id,AttributeType=S \
-        --key-schema AttributeName=Id,KeyType=HASH \
-        --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 \
-        --endpoint-url http://dynamodb:8000 || echo "Table may already exist" && \
-      echo "DynamoDB init complete"
-    environment:
-      - AWS_ACCESS_KEY_ID=dev
-      - AWS_SECRET_ACCESS_KEY=dev
-      - AWS_DEFAULT_REGION=eu-central-1
-    depends_on:
-      dynamodb:
-        condition: service_healthy
-
   fake_api:
     image: mcr.microsoft.com/dotnet/sdk:DotnetSdkImagePlaceholder
     working_dir: /code
@@ -54,22 +20,15 @@ services:
     volumes:
       - ./:/code
     environment:
-      - DYNAMODB_SERVICE_URL=http://dynamodb:8000
       - FAKE_API_URL=http://fake_api:80
     depends_on:
-      dynamodb:
-        condition: service_healthy
-      init-dynamo:
-        condition: service_completed_successfully
       fake_api:
         condition: service_healthy
     command: >
       bash -lc "dotnet build -c Release && dotnet run --project tests/NewApp.IntegrationTests -c Release --no-build"
 
 # Usage:
-#   docker compose up -d dynamodb init-dynamo
 #   docker compose up -d fake_api
 #   docker compose run --rm integration_tests
 # Ports:
-#   - DynamoDB Local: http://localhost:9310 (maps to container 8000)
 #   - Fake API: http://localhost:9312 (maps to container 80)

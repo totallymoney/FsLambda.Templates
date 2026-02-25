@@ -6,16 +6,17 @@ import * as path from "path";
 interface NewAppStackProps extends cdk.StackProps {
   readonly envName: string;
   readonly version: string;
+  readonly minimumLogLevel: string;
 }
 
 export class NewAppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: NewAppStackProps) {
     super(scope, id, props);
 
-    const helloWorldFunction = new lambda.Function(this, "HelloWorld", {
-      functionName: `NewApp-${props.envName}-helloWorld`,
+    const getItemFunction = new lambda.Function(this, "GetItem", {
+      functionName: `NewApp-${props.envName}-getItem`,
       runtime: lambda.Runtime.LambdaRuntimePlaceholder,
-      handler: "NewApp::NewApp.Handler::sayHello",
+      handler: "NewApp::Lambda.Handlers::getItem",
       code: lambda.Code.fromAsset(path.join(__dirname, "../../publish")),
       architecture: lambda.Architecture.ARM_64,
       memorySize: 512,
@@ -23,10 +24,11 @@ export class NewAppStack extends cdk.Stack {
       environment: {
         VERSION: props.version,
         ENVIRONMENT: props.envName,
+        MINIMUM_LOG_LEVEL: props.minimumLogLevel,
       },
     });
 
-    const functionUrl = helloWorldFunction.addFunctionUrl({
+    const functionUrl = getItemFunction.addFunctionUrl({
       authType: lambda.FunctionUrlAuthType.NONE,
     });
 

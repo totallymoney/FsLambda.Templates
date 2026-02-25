@@ -1,16 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>TargetFrameworkValue</TargetFramework>
+    <OutputType>Exe</OutputType>
     <GenerateProgramFile>false</GenerateProgramFile>
     <Nullable>enable</Nullable>
+    <NoWarn>NU1510</NoWarn>
     <WarningsAsErrors>FS0025</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Handler.fs" />
+    <Compile Include="TypeExtensions.fs" />
+    <Compile Include="Infrastructure.fs" />
+    <Compile Include="Json.fs" />
+    <Compile Include="Logging.fs" />
+    <Compile Include="Platform/Lambda.fs" />
+    <Compile Include="IO/ExternalAPI.fs" />
+    <Compile Include="AppContext.fs" />
+    <Compile Include="Workflows.fs" />
+    <Compile Include="Lambda/Utils.fs" />
+    <Compile Include="Lambda/Handlers.fs" />
+    <Compile Include="Lambda/Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" />
-    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" />
+    <PackageReference Include="AWSSDK.Lambda" />
+    <PackageReference Include="FSharp.SystemTextJson" />
+    <PackageReference Include="FsToolkit.ErrorHandling" />
+    <PackageReference Include="AsyncWriterResult" />
+    <PackageReference Include="System.Text.Json" />
   </ItemGroup>
 </Project>

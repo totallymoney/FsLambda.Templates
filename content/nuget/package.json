@@ -1,0 +1,13 @@
+{
+    "private": true,
+    "scripts": {
+        "restore": "dotnet tool restore",
+        "build": "dotnet build -c Release",
+        "utest": "dotnet run --project tests/NewApp.UnitTests -c Release",
+        "itest": "docker compose down && docker compose run --rm integration_tests",
+        "itestlocal": "docker compose down && docker compose up -d fake_api && sleep 2 && dotnet run --project tests/NewApp.IntegrationTests -c Release",
+        "test": "dotnet fsi build.fsx",
+        "testlocal": "npm run utest && npm run itestlocal",
+        "publish": "dotnet publish src/NewApp -c Release -o publish"
+    }
+}

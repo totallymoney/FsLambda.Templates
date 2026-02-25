@@ -7,4 +7,8 @@
     <Compile Include="Program.fs"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" />
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
 </Project>

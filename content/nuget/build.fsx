@@ -36,11 +36,7 @@ let startFakeApi () =
         let psi = ProcessStartInfo ("dotnet", $"run --project {fakeApiProject}")
         psi.Environment["PORT"] <- string fakeApiPort
         psi.UseShellExecute <- false
-        psi.RedirectStandardOutput <- true
-        psi.RedirectStandardError <- true
         let p = Process.Start psi
-        p.BeginOutputReadLine ()
-        p.BeginErrorReadLine ()
         fakeApiProcess <- Some p
 
         let mutable ready = false

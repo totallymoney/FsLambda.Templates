@@ -7,8 +7,7 @@
     <PackageVersion Include="FSharp.Core" Version="FSharpCoreVersionPlaceholder" />
     <PackageVersion Include="Amazon.Lambda.Core" Version="AmazonLambdaCorePkgVersion" />
     <PackageVersion Include="Amazon.Lambda.Serialization.SystemTextJson" Version="AmazonLambdaSerializationPkgVersion" />
-    <PackageVersion Include="Amazon.Lambda.APIGatewayEvents" Version="AmazonLambdaAPIGatewayEventsPkgVersion" />
-    <PackageVersion Include="AWSSDK.DynamoDBv2" Version="AwsSdkDynamoDBv2PkgVersion" />
+    <PackageVersion Include="AWSSDK.Lambda" Version="AwsSdkLambdaPkgVersion" />
     <PackageVersion Include="System.Text.Json" Version="SystemTextJsonPkgVersion" />
     <PackageVersion Include="FSharp.SystemTextJson" Version="FSharpSystemTextJsonPkgVersion" />
     <PackageVersion Include="FsToolkit.ErrorHandling" Version="FsToolkitErrorHandlingPkgVersion" />

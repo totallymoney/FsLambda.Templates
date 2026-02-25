@@ -4,6 +4,8 @@
     <TargetFramework>TargetFrameworkValue</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Utils.fs" />
+    <Compile Include="Setup.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="Main.fs" />
     <Content Include="paket.references" />

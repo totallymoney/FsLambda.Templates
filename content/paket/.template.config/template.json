@@ -170,23 +170,17 @@
       "replaces": "AmazonLambdaCorePkgVersion",
       "defaultValue": "2.8.1"
     },
-    "AmazonLambdaAPIGatewayEventsPkgVersion": {
-      "type": "parameter",
-      "dataType": "string",
-      "replaces": "AmazonLambdaAPIGatewayEventsPkgVersion",
-      "defaultValue": "2.7.0"
-    },
     "AmazonLambdaSerializationPkgVersion": {
       "type": "parameter",
       "dataType": "string",
       "replaces": "AmazonLambdaSerializationPkgVersion",
       "defaultValue": "2.4.5"
     },
-    "AwsSdkDynamoDBv2PkgVersion": {
+    "AwsSdkLambdaPkgVersion": {
       "type": "parameter",
       "dataType": "string",
-      "replaces": "AwsSdkDynamoDBv2PkgVersion",
-      "defaultValue": "4.0.6.1"
+      "replaces": "AwsSdkLambdaPkgVersion",
+      "defaultValue": "3.7.414.2"
     },
     "SystemTextJsonPkgVersion": {
       "type": "parameter",
@@ -207,10 +201,17 @@
       "defaultValue": "5.1.0"
     },
     "AsyncWriterResultPkgVersion": {
-      "type": "parameter",
-      "dataType": "string",
+      "type": "generated",
+      "generator": "switch",
       "replaces": "AsyncWriterResultPkgVersion",
-      "defaultValue": "2.0.66"
+      "parameters": {
+        "evaluator": "C++",
+        "datatype": "string",
+        "cases": [
+          { "condition": "(framework == 'net8.0')", "value": "2.0.65" },
+          { "condition": "(framework == 'net10.0')", "value": "2.0.66" }
+        ]
+      }
     },
     "ExpectoPkgVersion": {
       "type": "parameter",
