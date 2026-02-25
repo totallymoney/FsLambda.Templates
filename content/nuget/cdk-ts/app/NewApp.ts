@@ -14,6 +14,7 @@ function stack(envName: string) {
     stackName: `NewApp-${envName}`,
     envName,
     version,
+    minimumLogLevel: "info",
   });
 }
 

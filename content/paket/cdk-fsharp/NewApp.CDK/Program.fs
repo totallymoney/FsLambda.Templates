@@ -7,17 +7,14 @@ open FsCDK
 module Program =
     [<EntryPoint>]
     let main _argv =
-        // Define a stack with a simple HelloWorld Lambda and a public Function URL
         stack "NewApp" {
 
-            lambda "HelloWorld" {
+            lambda "GetItem" {
                 runtime Runtime.LambdaRuntimePlaceholder
-                // Namespace: NewApp; Module: Handler; Function: sayHello
-                handler "NewApp::NewApp.Handler::sayHello"
-                // Use the published output from the top-level publish directory
+                handler "NewApp::Lambda.Handlers::getItem"
                 code "../publish"
+                environment [ "MINIMUM_LOG_LEVEL", "info" ]
 
-                // Public function URL (no auth) for quick testing
                 functionUrl { authType FunctionUrlAuthType.NONE }
             }
         }

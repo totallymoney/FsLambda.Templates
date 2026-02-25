@@ -1,12 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>TargetFrameworkValue</TargetFramework>
+    <OutputType>Exe</OutputType>
     <GenerateProgramFile>false</GenerateProgramFile>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>FS0025</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Handler.fs" />
+    <Compile Include="TypeExtensions.fs" />
+    <Compile Include="Infrastructure.fs" />
+    <Compile Include="Json.fs" />
+    <Compile Include="Logging.fs" />
+    <Compile Include="Platform/Lambda.fs" />
+    <Compile Include="IO/ExternalAPI.fs" />
+    <Compile Include="AppContext.fs" />
+    <Compile Include="Workflows.fs" />
+    <Compile Include="Lambda/Utils.fs" />
+    <Compile Include="Lambda/Handlers.fs" />
+    <Compile Include="Lambda/Main.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
