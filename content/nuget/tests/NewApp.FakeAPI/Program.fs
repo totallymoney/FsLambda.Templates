@@ -1,6 +1,7 @@
 open System
 open System.IO
 open System.Text.Json
+open System.Threading.Tasks
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
@@ -39,7 +40,7 @@ app.MapGet (
 
 app.MapPost (
     "/2015-03-31/functions/{functionName}/invocations",
-    Func<HttpContext, _> (fun (context: HttpContext) ->
+    Func<HttpContext, Task> (fun (context: HttpContext) ->
         task {
             let functionName = context.Request.RouteValues["functionName"] :?> string
             app.Logger.Log (LogLevel.Information, $"Received a Lambda invoke request for {functionName}")
@@ -64,7 +65,8 @@ app.MapPost (
                     context.Response.WriteAsync (
                         """{"errorType": "ItemNotFoundError", "errorMessage": "Item not found"}"""
                     )
-        })
+        }
+        :> Task)
 )
 |> ignore
 
