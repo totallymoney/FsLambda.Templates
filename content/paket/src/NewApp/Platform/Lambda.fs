@@ -25,7 +25,11 @@ let invoke (client: AmazonLambdaClient) functionName data : AWR<string> =
             |> client.InvokeAsync
             |> Task.catchResult
             |> TaskResult.mapError (fun (ex: exn) ->
-                Error.create ErrorType.LambdaInvoke ex.Message {| Operation = "Invoke"; FunctionName = functionName |})
+                Error.create
+                    ErrorType.LambdaInvoke
+                    ex.Message
+                    {| Operation = "Invoke"
+                       FunctionName = functionName |})
 
         do! Write.elapsed stopwatch.Elapsed
         do! Write.log "FunctionError" response.FunctionError
@@ -41,7 +45,11 @@ let invoke (client: AmazonLambdaClient) functionName data : AWR<string> =
             do! Write.log "Error" error
 
             return!
-                Error.create ErrorType.LambdaInvoke error.ErrorMessage {| Operation = "Invoke"; FunctionName = functionName |}
+                Error.create
+                    ErrorType.LambdaInvoke
+                    error.ErrorMessage
+                    {| Operation = "Invoke"
+                       FunctionName = functionName |}
                 |> Error
     }
     |> AsyncWriter.mapLogs (Logging.mapSpanLogs (fun logs -> [ RootGroup ($"Lambda-Invoke-{functionName}", logs) ]))

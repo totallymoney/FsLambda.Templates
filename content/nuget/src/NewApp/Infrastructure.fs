@@ -129,7 +129,9 @@ let validateItemId (itemId: string) =
     | x -> Ok x
 
 module RequestDTOs =
-    type GetItem = { Purpose: string; ItemId: string }
+    type GetItem =
+        { Purpose: string
+          ItemId: string }
 
 module ResponseDTOs =
     type GetItem =

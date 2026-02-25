@@ -3,10 +3,7 @@ module Workflows
 open global.AsyncWriterResult
 
 
-let getItem
-    (appContext: AppContext.AppContext)
-    : RequestDTOs.GetItem -> AWR<ResponseDTOs.GetItem>
-    =
+let getItem (appContext: AppContext.AppContext) : RequestDTOs.GetItem -> AWR<ResponseDTOs.GetItem> =
     fun dto ->
         asyncWriterResult {
             let! itemId = validateItemId dto.ItemId

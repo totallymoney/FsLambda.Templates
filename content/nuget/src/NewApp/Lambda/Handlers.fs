@@ -8,8 +8,7 @@ open AsyncWriterResult
 
 type HandleRequest =
     static member inline directInvoke
-        (lambdaContext: ILambdaContext, performWork: AppContext.AppContext -> 'Args -> AWR<'Output>, input: 'Args)
-        : Stream =
+        (lambdaContext: ILambdaContext, performWork: AppContext.AppContext -> 'Args -> AWR<'Output>, input: 'Args) : Stream =
         let purpose = getPurpose input
 
         handleRequest lambdaContext LogCategory.APIRequest purpose (fun appContext ->

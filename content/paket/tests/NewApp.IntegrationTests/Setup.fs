@@ -11,8 +11,7 @@ let getItemOrDefault item defaultValue =
 
 let (<!?>) = getItemOrDefault
 
-let env =
-    {| ExternalApiMockUrl = "FAKE_API_URL" <!?> "http://localhost:9312" |}
+let env = {| ExternalApiMockUrl = "FAKE_API_URL" <!?> "http://localhost:9312" |}
 
 let testConfig: Config =
     { Version = ""
